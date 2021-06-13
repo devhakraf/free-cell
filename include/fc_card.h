@@ -14,10 +14,11 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <time.h>
 
 /* Cards type enumeration */
 typedef enum {
-	FC_CARD_TYPE_SPADES = 0,
+	FC_CARD_TYPE_SPADES = 1,
 	FC_CARD_TYPE_CLUBS,
 	FC_CARD_TYPE_HEARTS,
 	FC_CARD_TYPE_DIAMONDS

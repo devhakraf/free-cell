@@ -12,13 +12,6 @@
 #include "../include/stack.h"
 
 /**
- * Create new empty stack
- * 
- * @return stack_t* 
- */
-stack_t* stack_create();
-
-/**
  * Push given content to given stack
  * 
  * @param stack 
@@ -26,9 +19,6 @@ stack_t* stack_create();
  * @return uint8_t
  */
 uint8_t stack_push(stack_t **stack, void *content) {
-	// no stack pointer
-	if(!stack)
-		return 0;
 	// create stack node
 	stack_node_t *node = (stack_node_t*) malloc(sizeof(stack_node_t));
 	// fill the node
@@ -48,8 +38,8 @@ uint8_t stack_push(stack_t **stack, void *content) {
  * @return void* 
  */
 void* stack_pop(stack_t **stack) {
-	// no stack pointer
-	if(!stack)
+	// when empty stack
+	if(!(*stack))
 		return NULL;
 	// get head node
 	stack_node_t *node = *stack;
@@ -71,7 +61,7 @@ void* stack_pop(stack_t **stack) {
  * @return void* 
  */
 void* stack_peek(stack_t *stack) {
-	// no stack pointer
+	// when empty stack
 	if(!stack)
 		return NULL;
 	return stack->content;

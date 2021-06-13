@@ -25,12 +25,6 @@ typedef struct _stack_node{
 /* Stack definition */
 typedef stack_node_t stack_t;
 
-/**
- * Create new empty stack
- * 
- * @return stack_t* 
- */
-stack_t* stack_create();
 
 /**
  * Push given content to given stack

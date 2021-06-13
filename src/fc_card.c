@@ -46,14 +46,18 @@ fc_card_t* fc_create_random_card(uint8_t **saturation) {
 	// file randomlly the card
 	if(card) {
 		uint8_t number, type;
+		// seed rand from random numbers
+		srand(time(NULL));
 		// look for available card
 		do {
 			number = rand() % 13;
 			type = rand() % 4;
 		} while(saturation[number][type] != 0);
+		// marke found card as reserved
+		saturation[number][type] = 1;
 		// here an available card is found
-		card->number = number;
-		card->type = type;
+		card->number = number + 1;
+		card->type = type + 1;
 	}
 	// return created card
 	return card;
