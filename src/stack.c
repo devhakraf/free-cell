@@ -9,7 +9,7 @@
  * 
  */
 
-#include "../stack.h"
+#include "../include/stack.h"
 
 /**
  * Create new empty stack
