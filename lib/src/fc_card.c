@@ -37,6 +37,10 @@ fc_card_t* fc_create_card(uint8_t number, fc_card_type_t type) {
  * @return fc_card_t* 
  */
 fc_card_t* fc_create_random_card(uint8_t **saturation) {
+	// no saturation content
+	if(!saturation)
+		return NULL;
+
 	// allocate card memory
 	fc_card_t *card = (fc_card_t*) malloc(sizeof(fc_card_t));
 	// file randomlly the card
@@ -56,26 +60,10 @@ fc_card_t* fc_create_random_card(uint8_t **saturation) {
 }
 
 /**
- * Push given card to given stack
+ * Free memory allocated by a card
  * 
- * @param stack 
- * @param card
- * @return uint8_t
+ * @param card 
  */
-uint8_t fc_stack_push(fc_stack_t **stack, fc_card_t *card);
-
-/**
- * Return and remove stack head card
- * 
- * @param stack 
- * @return fc_card_t* 
- */
-fc_card_t* fc_stack_pop(fc_stack_t **stack);
-
-/**
- * Return stack head card
- * 
- * @param stack 
- * @return fc_card_t* 
- */
-fc_card_t* fc_stack_peek(fc_stack_t *stack);
+void fc_free_card(fc_card_t *card) {
+	free(card);
+}
