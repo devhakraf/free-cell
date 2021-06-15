@@ -70,6 +70,6 @@ void fc_game_display_card_or_space(fc_card_t *card);
  * @param destIndex 
  * @return uint8_t 
  */
-uint8_t fc_game_exec_move(fc_game_t *game, char sourceZone, uint8_t sourceIndex, char destZone, uint8_t destIndex);
+uint8_t fc_game_exec_move(fc_game_t *game, uint8_t cardIndex, char sourceZone, uint8_t sourceIndex, char destZone, uint8_t destIndex);
 
 #endif

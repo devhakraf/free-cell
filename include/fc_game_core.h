@@ -65,7 +65,7 @@ uint8_t fc_game_init(fc_game_t *game);
  * @param destination 
  * @return uint8_t 
  */
-uint8_t fc_move_card_between_columns(fc_game_t *game, uint8_t source, uint8_t destination);
+uint8_t fc_move_cards_between_columns(fc_game_t *game, uint8_t cardIndex, uint8_t source, uint8_t destination);
 
 /**
  * Move card from free cell (zone2) to foundation (zone3)
@@ -106,6 +106,22 @@ uint8_t fc_move_card_column_freecell(fc_game_t *game, uint8_t source, uint8_t de
  * @return uint8_t 
  */
 uint8_t fc_move_card_column_foundation(fc_game_t *game, uint8_t source, uint8_t destination);
+
+/**
+ * Check if the user has won the game
+ * 
+ * @param game 
+ * @return uint8_t 
+ */
+uint8_t fc_game_is_won(fc_game_t *game);
+
+/**
+ * Check if the game is over, no more moves possible
+ * 
+ * @param game 
+ * @return uint8_t 
+ */
+uint8_t fc_game_is_over(fc_game_t *game);
 
 /**
  * Free game content

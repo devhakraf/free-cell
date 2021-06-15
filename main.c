@@ -23,7 +23,7 @@ int main() {
 
 	char answer;
 	char sourceZone, destZone;
-	int sourceIndex, destIndex, res;
+	int sourceIndex, destIndex, cardIndex = 0, res;
 	// create new game instance
 	fc_game_t *game = fc_create_game();
 
@@ -56,10 +56,11 @@ int main() {
 					switch(answer) {
 						case 'M':
 						case 'm':
+							scanf(" %d", &cardIndex);
 							scanf(" %c%d %c%d", &sourceZone, &sourceIndex, &destZone, &destIndex);
 
 							// execute move command
-							res = fc_game_exec_move(game, sourceZone, sourceIndex, destZone, destIndex);
+							res = fc_game_exec_move(game, cardIndex, sourceZone, sourceIndex, destZone, destIndex);
 
 							if(res == -4){
 								printf("\tERROR: Commande non valide! Tapez (h ou H) pour le manuel du jeu");
@@ -69,6 +70,23 @@ int main() {
 								printf("\tERROR: Commande de deplacement non valide");
 								getch();
 							}
+							else if(res == 1) {
+								// check if game won
+								if(fc_game_is_won(game) == 1) {
+									printf("\t!!! You Won the Game !!!");
+									answer = 'q';
+									getch();
+								}
+
+								// check if game over
+								if(fc_game_is_over(game) == 1) {
+									printf("\t!!! GAME OVER !!!");
+									answer = 'q';
+									getch();
+								}
+							}
+							cardIndex = 0;
+							getch();
 							break;
 						case 'H':
 						case 'h':
@@ -80,14 +98,19 @@ int main() {
 						// restart game
 						case 'Q':
 						case 'q':
-							printf("Recommencer le jeu ? (y/N)");
+							printf("\tQuitter la partie ? (y/N)");
 							scanf(" %c", &answer);
-							answer = answer == 'y' ? 'q' : 's';
+							answer = answer == 'y' ? 'q' : '-';
 							break;
+						default:
+							printf("\n\tERROR: Invalide commande");
+							getch();
+							break;
+
 					}
 				}
 				answer = 's';
-				fc_free_game(game);
+				fc_free_game_content(game);
 				break;
 			case 'H':
 			case 'h':
@@ -97,7 +120,11 @@ int main() {
 				getch();
 				break;
 			case 'Q':
-			case 'q': break;
+			case 'q':
+				printf("\tQuitter le jeu ? (y/N)");
+				scanf(" %c", &answer);
+				answer = answer == 'y' ? 'q' : '-';
+				break;
 			default:
 				printf("\n\tERROR: Invalide choix");
 				getch();

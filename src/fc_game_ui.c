@@ -186,10 +186,10 @@ void fc_game_display_card_or_space(fc_card_t *card) {
  * @param destIndex 
  * @return uint8_t 
  */
-uint8_t fc_game_exec_move(fc_game_t *game, char sourceZone, uint8_t sourceIndex, char destZone, uint8_t destIndex) {
+uint8_t fc_game_exec_move(fc_game_t *game, uint8_t cardIndex, char sourceZone, uint8_t sourceIndex, char destZone, uint8_t destIndex) {
 	// execute recieved move command
 	if((sourceZone == 'l' || sourceZone == 'L') && (destZone == 'l' || destZone == 'L'))
-		return fc_move_card_between_columns(game, sourceIndex-1, destIndex-1);
+		return fc_move_cards_between_columns(game, cardIndex, sourceIndex-1, destIndex-1);
 
 	else if((sourceZone == 'l' || sourceZone == 'L') && (destZone == 'c' || destZone == 'C'))
 		return fc_move_card_column_freecell(game, sourceIndex-1, destIndex-1);

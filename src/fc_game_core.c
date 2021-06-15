@@ -84,14 +84,14 @@ uint8_t fc_game_init(fc_game_t *game) {
 }
 
 /**
- * Move card between zone 1 columns, from source index to destination index
+ * Move cards between zone 1 columns, from source index to destination index
  * 
  * @param game 
  * @param source 
  * @param destination 
  * @return uint8_t 
  */
-uint8_t fc_move_card_between_columns(fc_game_t *game, uint8_t source, uint8_t destination) {
+uint8_t fc_move_cards_between_columns(fc_game_t *game, uint8_t cardIndex, uint8_t source, uint8_t destination) {
 	// when empty game instance
 	if(!game)
 		return 2;
@@ -104,8 +104,10 @@ uint8_t fc_move_card_between_columns(fc_game_t *game, uint8_t source, uint8_t de
 	fc_card_t *card = (fc_card_t*) fc_dll_peek(game->listColumns[source].list);
 	fc_card_t *destTopCard = (fc_card_t*) fc_dll_peek(game->listColumns[destination].list);
 
+	printf("M l%d -> l%d | %p | %p |\n", source+1, destination+1, card, destTopCard);
+
 	// check rules and move card
-	if(card && (!destTopCard || (card->color != destTopCard->color && card->number + 1 == destTopCard->number))) {
+	if(card && (destTopCard == NULL || (card->color != destTopCard->color && card->number + 1 == destTopCard->number))) {
 		// move the source card to destination column
 		fc_dll_add_to_head(game->listColumns[destination].list, card);
 		game->listColumns[destination].count++;
@@ -138,8 +140,10 @@ uint8_t fc_move_card_freecell_foundation(fc_game_t *game, uint8_t source, uint8_
 	fc_card_t *card = game->freeCells[source];
 	fc_card_t *destTopCard = (fc_card_t*) fc_stack_peek(game->foundations[destination].stack);
 
+	printf("M c%d -> f%d | %p | %p |\n", source+1, destination+1, card, destTopCard);
+
 	// check rules and move card
-	if(card && (!destTopCard || (card->type == destTopCard->type && card->number - 1 == destTopCard->number))) {
+	if(card && ((destTopCard == NULL && card->number == 1) || (destTopCard != NULL && card->type == destTopCard->type && card->number - 1 == destTopCard->number))) {
 		// move the source card to destination column
 		fc_stack_push(&(game->foundations[destination].stack), card);
 		game->foundations[destination].count++;
@@ -172,8 +176,10 @@ uint8_t fc_move_card_freecell_column(fc_game_t *game, uint8_t source, uint8_t de
 	fc_card_t *card = game->freeCells[source];
 	fc_card_t *destTopCard = (fc_card_t*) fc_dll_peek(game->listColumns[destination].list);
 
+	printf("M c%d -> l%d | %p | %p |\n", source+1, destination+1, card, destTopCard);
+
 	// check rules and move card
-	if(card && (!destTopCard || (card->color != destTopCard->color && card->number + 1 == destTopCard->number))) {
+	if(card && (destTopCard == NULL || (card->color != destTopCard->color && card->number + 1 == destTopCard->number))) {
 		// move the source card to destination column
 		fc_dll_add_to_head(game->listColumns[destination].list, card);
 		game->listColumns[destination].count++;
@@ -227,14 +233,16 @@ uint8_t fc_move_card_column_foundation(fc_game_t *game, uint8_t source, uint8_t 
 	if(!game)
 		return 2;
 	// indexs validation
-	if(!(destination >= 0 && destination <= 7 && source >= 0 && source <= 3))
+	if(!(destination >= 0 && destination <= 3 && source >= 0 && source <= 7))
 		return 3; /* invalide indexs */
 	// get card from source column
 	fc_card_t *card = (fc_card_t*) fc_dll_peek(game->listColumns[source].list);
 	fc_card_t *destTopCard = (fc_card_t*) fc_stack_peek(game->foundations[destination].stack);
 
+	printf("M l%d -> f%d | %p | %p |\n", source+1, destination+1, card, destTopCard);
+
 	// check rules and move card
-	if(card && (!destTopCard || (card->type == destTopCard->type && card->number - 1 == destTopCard->number))) {
+	if(card && ((destTopCard == NULL && card->number == 1) || (destTopCard != NULL && card->type == destTopCard->type && card->number - 1 == destTopCard->number))) {
 		// move the source card to destination column
 		fc_stack_push(&(game->foundations[destination].stack), card);
 		game->foundations[destination].count++;
@@ -246,6 +254,91 @@ uint8_t fc_move_card_column_foundation(fc_game_t *game, uint8_t source, uint8_t 
 	}
 	// rules not validated
 	return 4;
+}
+
+/**
+ * Check if the user has won the game
+ * 
+ * @param game 
+ * @return uint8_t 
+ */
+uint8_t fc_game_is_won(fc_game_t *game) {
+	// check foundation columns
+	for(uint8_t i=0; i<4; i++) {
+		if(game->foundations[i].count != 13)
+			return 0;
+	}
+	// if all foundation columns count is 13 then the use has won the game
+	return 1;
+}
+
+/**
+ * Check if the game is over, no more moves possible
+ * 
+ * @param game 
+ * @return uint8_t 
+ */
+uint8_t fc_game_is_over(fc_game_t *game) {
+	// check if one of freecells is empty
+	for(uint8_t i=0; i<4; i++)
+		if(game->freeCells[i] == NULL){
+			printf("Empty Freecell");
+			return 0;
+		}
+
+	fc_card_t *currentCard;
+	fc_card_t *card;
+	
+	// check freecell move possibilities
+	for(uint8_t i=0; i<4; i++) {
+		// get card from freecell 
+		currentCard = game->freeCells[i];
+		// check possible move from freecells to foundation column
+		for(uint8_t j=0; j<4; j++) {
+			card = (fc_card_t*) fc_stack_peek(game->foundations[j].stack);
+			if(card != NULL && currentCard->number - 1 == card->number && currentCard->type == card->type) {
+				printf("Freecell to foundation");
+				return 0;
+			}
+		}
+		// check possible move from freecells to list columns
+		for(uint8_t j=0; j<8; j++) {
+			card = (fc_card_t*) fc_dll_peek(game->listColumns[j].list);
+			if(card != NULL && currentCard->number + 1 == card->number && currentCard->color != card->color) {
+				printf("Freecell to list");
+				return 0;
+			}
+		}
+	}
+
+	// check column move possibilities
+	for(uint8_t i=0; i<8; i++) {
+		currentCard = (fc_card_t*) fc_dll_peek(game->listColumns[i].list);
+		if(currentCard == NULL) {
+			printf("Empty list column");
+			return 0; /* Empty column */
+		}
+		// check possible move from column list to foundation
+		for(uint8_t j=0; j<4; j++) {
+			card = (fc_card_t*) fc_stack_peek(game->foundations[j].stack);
+			if((card == NULL && currentCard->number == 1) || (card != NULL && currentCard->number -1 == card->number && currentCard->type == card->type)) {
+				printf("List to foundation");
+				return 0;
+			}
+		}
+
+		// check move possiblities between columns
+		for(uint8_t j=i+1; j<8; j++) {
+			card = (fc_card_t*) fc_dll_peek(game->listColumns[j].list);
+			// check move posibilitie between i column and j column
+			if(card != NULL && ((currentCard->number + 1 == card->number && currentCard->color != card->color) || (card->number + 1 == currentCard->number && card->color != currentCard->color))) {
+				printf("Between columns");
+				return 0;
+			}
+		}
+	}
+	// game over
+	return 1;
 }
 
 /**
