@@ -1,0 +1,7 @@
+
+	Syntaxe: Commande Options
+
+	Commandes
+
+		m:		Move from zone to zone
+				Ex: m l5 l7  | m l5 c3

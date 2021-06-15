@@ -16,6 +16,8 @@
 #include <stdint.h>
 #include <time.h>
 
+
+
 /* Cards type enumeration */
 typedef enum {
 	FC_CARD_TYPE_HEARTS = 3,

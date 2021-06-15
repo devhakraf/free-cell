@@ -9,7 +9,7 @@
  * 
  */
 
-#include "../include/stack.h"
+#include "../include/fc_stack.h"
 
 /**
  * Push given content to given stack
@@ -18,9 +18,9 @@
  * @param content
  * @return uint8_t
  */
-uint8_t stack_push(stack_t **stack, void *content) {
+uint8_t fc_stack_push(fc_stack_t **stack, void *content) {
 	// create stack node
-	stack_node_t *node = (stack_node_t*) malloc(sizeof(stack_node_t));
+	fc_stack_node_t *node = (fc_stack_node_t*) malloc(sizeof(fc_stack_node_t));
 	// fill the node
 	if(node) {
 		node->content = content;
@@ -37,12 +37,12 @@ uint8_t stack_push(stack_t **stack, void *content) {
  * @param stack 
  * @return void* 
  */
-void* stack_pop(stack_t **stack) {
+void* fc_stack_pop(fc_stack_t **stack) {
 	// when empty stack
 	if(!(*stack))
 		return NULL;
 	// get head node
-	stack_node_t *node = *stack;
+	fc_stack_node_t *node = *stack;
 	// point stack to next node
 	*stack = node->next;
 	// get node content
@@ -60,7 +60,7 @@ void* stack_pop(stack_t **stack) {
  * @param stack 
  * @return void* 
  */
-void* stack_peek(stack_t *stack) {
+void* fc_stack_peek(fc_stack_t *stack) {
 	return stack ? stack->content : NULL;
 }
 
@@ -70,6 +70,6 @@ void* stack_peek(stack_t *stack) {
  * @param stack 
  * @return uint8_t 
  */
-uint8_t stack_is_empty(stack_t *stack) {
+uint8_t fc_stack_is_empty(fc_stack_t *stack) {
 	return stack == NULL ? 1 : 0;
 }
