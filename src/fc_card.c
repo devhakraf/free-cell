@@ -26,6 +26,7 @@ fc_card_t* fc_create_card(uint8_t number, fc_card_type_t type) {
 	if(card) {
 		card->number = number;
 		card->type = type;
+		card->color = type < 5 ? FC_CARD_RED : FC_CARD_BALCK;
 	}
 	return card;
 }
@@ -57,7 +58,8 @@ fc_card_t* fc_create_random_card(uint8_t **saturation) {
 		saturation[number][type] = 1;
 		// here an available card is found
 		card->number = number + 1;
-		card->type = type + 1;
+		card->type = type + FC_CARD_TYPE_HEARTS; /* Range the type to 3 - 6 */
+		card->color = card->type < 5 ? FC_CARD_RED : FC_CARD_BALCK;
 	}
 	// return created card
 	return card;

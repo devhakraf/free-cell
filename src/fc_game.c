@@ -91,7 +91,32 @@ uint8_t fc_game_init(fc_game_t *game) {
  * @param destination 
  * @return uint8_t 
  */
-uint8_t fc_move_card_between_columns(fc_game_t *game, uint8_t source, uint8_t destination);
+uint8_t fc_move_card_between_columns(fc_game_t *game, uint8_t source, uint8_t destination) {
+	// when empty game instance
+	if(!game)
+		return 0;
+	
+	printf("%d, %d\n", source, destination);
+
+	// check move rules
+	fc_card_t *card = (fc_card_t*) stack_peek(game->stackColumns[source].stack);
+	fc_card_t *destTopCard = (fc_card_t*) stack_peek(game->stackColumns[destination].stack);
+
+	printf("S: %p, D: %p\n", card, destTopCard);
+
+	printf("Source: %d - %d | Dest: %d - %d\n", card->number, card->color, destTopCard->number, destTopCard->color);
+
+	if(card && (!destTopCard || (card->color != destTopCard->color && card->number + 1 == destTopCard->number))) {
+		// move the source card to destination column
+		stack_push(&(game->stackColumns[destination].stack), card);
+		game->stackColumns[destination].count++;
+		// remove card from source column
+		stack_pop(&(game->stackColumns[source].stack));
+		game->stackColumns[source].count--;
+		return 1;
+	}
+	return 0;
+}
 
 /**
  * Move card from free cell (zone2) to foundation (zone3)

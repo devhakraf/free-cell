@@ -61,10 +61,7 @@ void* stack_pop(stack_t **stack) {
  * @return void* 
  */
 void* stack_peek(stack_t *stack) {
-	// when empty stack
-	if(!stack)
-		return NULL;
-	return stack->content;
+	return stack ? stack->content : NULL;
 }
 
 /**

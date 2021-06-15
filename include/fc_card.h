@@ -18,16 +18,23 @@
 
 /* Cards type enumeration */
 typedef enum {
-	FC_CARD_TYPE_SPADES = 1,
+	FC_CARD_TYPE_HEARTS = 3,
+	FC_CARD_TYPE_DIAMONDS,
 	FC_CARD_TYPE_CLUBS,
-	FC_CARD_TYPE_HEARTS,
-	FC_CARD_TYPE_DIAMONDS
+	FC_CARD_TYPE_SPADES
 } fc_card_type_t;
+
+/* Card color enumeration */
+typedef enum {
+	FC_CARD_RED = 1,
+	FC_CARD_BALCK
+} fc_card_color_t;
 
 /* Cards structure */
 typedef struct {
 	uint8_t number; /* 1 - 13 */
 	uint8_t type;
+	uint8_t color; /* B:1 - R:2 */
 } fc_card_t;
 
 

@@ -12,6 +12,8 @@
 #ifndef FC_GAME_H
 #define FC_GAME_H
 
+#include <stdio.h>
+
 #include <stdlib.h>
 #include <stdint.h>
 #include "fc_card.h"
@@ -19,8 +21,8 @@
 
 /* Stack columns definition */
 typedef struct {
-	uint8_t count; 		/* Number of cards in column */
-	stack_t *stack; 	/* Stack of cards */
+	uint8_t count; 			/* Number of cards in column */
+	stack_t *stack; 		/* Stack of cards */
 } fc_column_t;
 
 /* Game structure definition */
